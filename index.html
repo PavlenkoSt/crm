@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>CRM</title>
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <ul>
+                <li v-for="(item, index) in content">
+                    <a :class="{active: item.show}" @click="changeActiveItem(index)" href="#">{{item.name}}</a>
+                </li>
+            </ul>
+            <a href="#" class="current-balance">Текущий баланс: <span> {{ uahBill }}</span></a>
+        </header>
+        <div v-if="content[0].show" class="add">
+            <div class="add-tabs">
+                <a href="#" @click.prevent="activeAddTab('plus')" class="add-tab"
+                    :class="{active: tab=='plus'}">Доход</a>
+                <a href="#" @click.prevent="activeAddTab('minus')" class="add-tab"
+                    :class="{active: tab=='minus'}">Расход</a>
+            </div>
+            <div class="add-content">
+                <form action="" :class="{'plus-sum':tab=='plus', 'minus-sum':tab=='minus'}">
+                    <label for="addTransactSum" :class="{set: activeInputs[0].active == true}"><span
+                            class="label">Сумма:</span>
+                        <input type="text" class="input add-sum" v-model="activeInputs[0].value"
+                            @keydown="inputTransactSum($event)" @blur="deactivateAddInput(0)"
+                            @focus="activateAddInput(0)" id="addTransactSum"></label>
+                    <div class="inputs-group">
+                        <label for="from" class="lable-double" :class="{set: activeInputs[1].active == true}"><span
+                                class="label" :class="{disabled: tab=='minus'}">Откуда:</span>
+                            <input type="text" v-model="activeInputs[1].value" class="input input-double"
+                                :disabled="tab=='minus'" id="from" @blur="deactivateAddInput(1)"
+                                @focus="activateAddInput(1)"></label>
+                        <label for="into" class="lable-double" :class="{set: activeInputs[2].active == true}"><span
+                                class="label" :class="{disabled: tab=='plus'}">Куда:</span>
+                            <input type="text" v-model="activeInputs[2].value" class="input input-double"
+                                :disabled="tab=='plus'" id="into" @blur="deactivateAddInput(2)"
+                                @focus="activateAddInput(2)"></label>
+                    </div>
+                    <label for="info" class="add-info" :class="{set: activeInputs[3].active == true}"><span
+                            class="label">Описание:</span>
+                        <input type="text" v-model="activeInputs[3].value" class="input add-info" id="info"
+                            @blur="deactivateAddInput(3)" @focus="activateAddInput(3)"></label>
+
+                    <input type="submit" class="add-btn" :class="{plus: tab=='plus', minus: tab=='minus'}"
+                        @click.prevent="setTransaction" value="Сохранить">
+                </form>
+                <div class="date">{{getDate()}}</div>
+            </div>
+        </div>
+        <div v-if="content[1].show" class="stat">
+            <div class="add-tabs">
+                <a href="#" :class="{active:stat=='journal'}" @click.prevent="stat='journal'" class="add-tab">Журнал</a>
+                <a href="#" :class="{active:stat=='report'}" @click.prevent="stat='report'" class="add-tab">Отчеты</a>
+            </div>
+            <div class="add-content sm" v-if="stat=='journal'">
+                <table v-if="allTransaction.length">
+                    <tr>
+                        <td class="head">Дата</td>
+                        <td class="head">Тип</td>
+                        <td class="head">Сумма</td>
+                        <td class="head">Категория</td>
+                        <td class="head">Описание</td>
+                        <td class="head">Удалить</td>
+                    </tr>
+                    <tr v-for="(item, index) in allTransaction"
+                        :class="{plus: item.type=='Доход', minus: item.type=='Расход'}">
+                        <td>{{item.date}}</td>
+                        <td>{{item.type}}</td>
+                        <td>{{item.sum + ' ₴'}}</td>
+                        <td>{{item.target}}</td>
+                        <td>{{item.desc}}</td>
+                        <td><button class="remove-transaction" @click="removeTransaction(index)"
+                                :class="{red: item.type=='Доход', green: item.type=='Расход'}">Удалить</button></td>
+                    </tr>
+                </table>
+                <p class="no-notes" v-else>Записей пока нет.</p>
+            </div>
+        </div>
+        <div v-if="content[2].show" class="bill">bill</div>
+
+    </div>
+
+
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
