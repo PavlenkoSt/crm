@@ -135,6 +135,9 @@ const app = new Vue({
                     el.show = false;
                 }
             });
+            if (this.mobileActiveMenu == true) {
+                this.mobileActiveMenu = false;
+            }
         },
         activeAddTab(str) {
             this.activeInputs[1].value = '';
