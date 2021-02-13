@@ -30,7 +30,7 @@
                 <div class="modal-content">
                     <h4 class="modal-header">Приветствую</h4>
                     <p class="modal-info">Для начала использования программы, ведите ваш текущий баланс:</p>
-                    <input id="input-init-bill" type="text" value="0">
+                    <input id="input-init-bill" type="text" value="0" @keydown="inputTransactSum($event)">
                 </div>
                 <div class="modal-footer">
                     <a href="#!" class="modal-close waves-effect waves-green btn-flat" @click="setFirstBill">Начать</a>
@@ -53,7 +53,7 @@
                     <div class="modal-content">
                         <h4 class="modal-header">Текущий баланс</h4>
                         <p class="modal-info">
-                            <input id="modal-input" type="text" :value="bill">
+                            <input id="modal-input" type="text" :value="bill" @keydown="inputTransactSum($event)">
                         </p>
                     </div>
                     <div class="modal-footer">
