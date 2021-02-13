@@ -14,88 +14,236 @@
 </head>
 
 <body>
-    <div id="app">
-        <header>
-            <ul>
-                <li v-for="(item, index) in content">
-                    <a :class="{active: item.show}" @click="changeActiveItem(index)" href="#">{{item.name}}</a>
-                </li>
-            </ul>
-            <a href="#" class="current-balance">Текущий баланс: <span> {{ uahBill }}</span></a>
-        </header>
-        <div v-if="content[0].show" class="add">
-            <div class="add-tabs">
-                <a href="#" @click.prevent="activeAddTab('plus')" class="add-tab"
-                    :class="{active: tab=='plus'}">Доход</a>
-                <a href="#" @click.prevent="activeAddTab('minus')" class="add-tab"
-                    :class="{active: tab=='minus'}">Расход</a>
+    <div id="app" :class="{'no-scroll':!load}">
+        <div v-if="!load" id="cube-loader">
+            <div class="caption">
+                <div class="cube-loader">
+                    <div class="cube loader-1"></div>
+                    <div class="cube loader-2"></div>
+                    <div class="cube loader-4"></div>
+                    <div class="cube loader-3"></div>
+                </div>
             </div>
-            <div class="add-content">
-                <form action="" :class="{'plus-sum':tab=='plus', 'minus-sum':tab=='minus'}">
-                    <label for="addTransactSum" :class="{set: activeInputs[0].active == true}"><span
-                            class="label">Сумма:</span>
-                        <input type="text" class="input add-sum" v-model="activeInputs[0].value"
-                            @keydown="inputTransactSum($event)" @blur="deactivateAddInput(0)"
-                            @focus="activateAddInput(0)" id="addTransactSum"></label>
-                    <div class="inputs-group">
-                        <label for="from" class="lable-double" :class="{set: activeInputs[1].active == true}"><span
-                                class="label" :class="{disabled: tab=='minus'}">Откуда:</span>
-                            <input type="text" v-model="activeInputs[1].value" class="input input-double"
-                                :disabled="tab=='minus'" id="from" @blur="deactivateAddInput(1)"
-                                @focus="activateAddInput(1)"></label>
-                        <label for="into" class="lable-double" :class="{set: activeInputs[2].active == true}"><span
-                                class="label" :class="{disabled: tab=='plus'}">Куда:</span>
-                            <input type="text" v-model="activeInputs[2].value" class="input input-double"
-                                :disabled="tab=='plus'" id="into" @blur="deactivateAddInput(2)"
-                                @focus="activateAddInput(2)"></label>
+        </div>
+        <div v-if="load" class="wrapper">
+            <div id="modal2" class="modal">
+                <div class="modal-content">
+                    <h4 class="modal-header">Приветствую</h4>
+                    <p class="modal-info">Для начала использования программы, ведите ваш текущий баланс:</p>
+                    <input id="input-init-bill" type="text" value="0">
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-close waves-effect waves-green btn-flat" @click="setFirstBill">Начать</a>
+                </div>
+            </div>
+            <header>
+                <div class="header-burger" :class="{active: mobileActiveMenu}"
+                    @click="mobileActiveMenu=!mobileActiveMenu">
+                    <div class="header-burger-line"></div>
+                </div>
+                <ul :class="{active: mobileActiveMenu}">
+                    <li v-for="(item, index) in content">
+                        <a :class="{active: item.show}" @click="changeActiveItem(index)">{{item.name}}</a>
+                    </li>
+                </ul>
+                <a href="#modal1" class="current-balance modal-trigger">Текущий
+                    баланс:
+                    <span> {{ bill | uah }}</span></a>
+                <div id="modal1" class="modal">
+                    <div class="modal-content">
+                        <h4 class="modal-header">Текущий баланс</h4>
+                        <p class="modal-info">
+                            <input id="modal-input" type="text" :value="bill">
+                        </p>
                     </div>
-                    <label for="info" class="add-info" :class="{set: activeInputs[3].active == true}"><span
-                            class="label">Описание:</span>
-                        <input type="text" v-model="activeInputs[3].value" class="input add-info" id="info"
-                            @blur="deactivateAddInput(3)" @focus="activateAddInput(3)"></label>
+                    <div class="modal-footer">
+                        <a href="#!" @click="modalOk" class="modal-close waves-effect waves-green btn-flat">Принять</a>
+                        <a href="#!" @click="modalCancel"
+                            class="modal-close waves-effect waves-red btn-flat">Отклонить</a>
+                    </div>
+                </div>
+            </header>
+            <div v-if="content[0].show" class="add">
+                <div class="add-tabs">
+                    <a href="#" @click.prevent="activeAddTab('plus')" class="add-tab"
+                        :class="{active: tab=='plus'}">Доход</a>
+                    <a href="#" @click.prevent="activeAddTab('minus')" class="add-tab"
+                        :class="{active: tab=='minus'}">Расход</a>
+                </div>
+                <div class="add-content sm">
+                    <form action="" :class="{'plus-sum':tab=='plus', 'minus-sum':tab=='minus'}">
+                        <label for="addTransactSum" :class="{set: activeInputs[0].active == true}"><span
+                                class="label">Сумма:</span>
+                            <input type="text" class="input add-sum" v-model="activeInputs[0].value"
+                                @keydown="inputTransactSum($event)" @blur="deactivateAddInput(0)"
+                                @focus="activateAddInput(0)" id="addTransactSum"></label>
+                        <div class="inputs-group">
+                            <label for="from" class="lable-double" :class="{set: activeInputs[1].active == true}"><span
+                                    class="label" :class="{disabled: tab=='minus'}">Откуда:</span>
+                                <input type="text" v-model="activeInputs[1].value" class="input input-double"
+                                    :disabled="tab=='minus'" id="from" @blur="deactivateAddInput(1)"
+                                    @focus="activateAddInput(1)"></label>
+                            <label for="into" class="lable-double" :class="{set: activeInputs[2].active == true}"><span
+                                    class="label" :class="{disabled: tab=='plus'}">Куда:</span>
+                                <input type="text" v-model="activeInputs[2].value" class="input input-double"
+                                    :disabled="tab=='plus'" id="into" @blur="deactivateAddInput(2)"
+                                    @focus="activateAddInput(2)"></label>
+                        </div>
+                        <label for="info" class="add-info" :class="{set: activeInputs[3].active == true}"><span
+                                class="label">Описание:</span>
+                            <input type="text" v-model="activeInputs[3].value" class="input add-info" id="info"
+                                @blur="deactivateAddInput(3)" @focus="activateAddInput(3)"></label>
 
-                    <input type="submit" class="add-btn" :class="{plus: tab=='plus', minus: tab=='minus'}"
-                        @click.prevent="setTransaction" value="Сохранить">
-                </form>
-                <div class="date">{{getDate()}}</div>
+                        <input type="submit" class="add-btn" :class="{plus: tab=='plus', minus: tab=='minus'}"
+                            @click.prevent="setTransaction" value="Сохранить">
+                    </form>
+                    <div class="date">{{getDate()}}</div>
+                </div>
+            </div>
+            <div v-if="content[1].show" class="stat">
+                <div class="add-tabs">
+                    <a href="#" :class="{active:stat=='journal'}" @click.prevent="stat='journal'"
+                        class="add-tab">Журнал</a>
+                    <a href="#" :class="{active:stat=='report'}" @click.prevent="stat='report'"
+                        class="add-tab">Отчеты</a>
+                </div>
+                <div class="add-content sm" v-if="stat=='journal'">
+                    <table v-if="allTransaction.length">
+                        <tr>
+                            <td class="head">Дата</td>
+                            <td class="head">Тип</td>
+                            <td class="head">Сумма</td>
+                            <td class="head">Категория</td>
+                            <td class="head none">Описание</td>
+                            <td class="head">Удалить</td>
+                        </tr>
+                        <tr v-for="(item, index) in allTransaction"
+                            :class="{plus: item.type=='Доход', minus: item.type=='Расход'}">
+                            <td>{{item.date}}</td>
+                            <td>{{item.type}}</td>
+                            <td>{{item.sum + ' ₴'}}</td>
+                            <td>{{item.target}}</td>
+                            <td class="none">{{item.desc}}</td>
+                            <td><button class="remove-transaction" @click="removeTransaction(index)"
+                                    :class="{red: item.type=='Доход', green: item.type=='Расход'}">Удалить</button></td>
+                        </tr>
+                    </table>
+                    <p class="no-notes" v-else>Записей пока нет.</p>
+                </div>
+                <div class="add-content sm" v-if="stat=='report'">
+                    <div class="diagram">
+                        <div class="diagram-btns">
+                            <a href="#" class="diagram-btn plus" :class="{active: report=='Доход'}"
+                                @click.prevent="updateDiagram('Доход')">Доходы</a>
+                            <a href="#" class="diagram-btn minus" :class="{active: report=='Расход'}"
+                                @click.prevent="updateDiagram('Расход')">Расходы</a>
+                        </div>
+                        <div class="select">
+                            <select @change="selectedChangeHandler" v-model="select" id="select">
+                                <option value="day" selected>Сегодня</option>
+                                <option value="week">Последняя неделя</option>
+                                <option value="month">Последний месяц</option>
+                                <option value="year">Последний год</option>
+                            </select>
+                        </div>
+                        <div class="diagram-body" v-if="diagram">
+                            <line-chart :report="report" :styles="chartWidth" :select="select"></line-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="content[2].show" class="bill">
+                <div class="add-tabs">
+                    <a href="#" :class="{active:plan=='plan'}" @click.prevent="plan='plan'"
+                        class="add-tab">Планирование</a>
+                    <a href="#" :class="{active:plan=='limit'}" @click.prevent="plan='limit'" class="add-tab">Лимит</a>
+                </div>
+                <div class="plans" v-if="plan=='plan'">
+                    <div class="add-content sm column" v-if="plans.length">
+                        <div class="plans-item" v-for="(plan, index) in plans" :key="plan.name">
+                            <label>
+                                <input type="checkbox" v-model="plans[index].done" @change="changeCheckTask" />
+                                <span class="plans-name">{{plan.name}}</span>
+                            </label>
+                            <div class="plans-progress" :title="calcLine(plan.sum)">
+                                <div class="plans-line">
+                                    <div class="plans-subline" :style="{width: calcLine(plan.sum)}"></div>
+                                </div>
+                            </div>
+                            <div class="plans-bill">{{bill}} / {{plan.sum}}</div>
+                            <button class="plans-remove" @click="removeTask">Удалить</button>
+                        </div>
+                    </div>
+                    <p class="no-notes" v-else>Планов пока нет. Добавьте новую задачу.</p>
+                    <form class="plan plus-sum" action="" @submit.prevent="setNewTask">
+                        <div class="inputs-group large plans">
+                            <label for="task" class="lable-double" :class="{set: activeInputs[4].active == true}"><span
+                                    class="label">Задача:</span>
+                                <input type="text" class="input input-double" @blur="deactivateAddInput(4)"
+                                    @focus="activateAddInput(4)" v-model="activeInputs[4].value" id="task"></label>
+                            <label for="taksSum" class="lable-double"
+                                :class="{set: activeInputs[5].active == true}"><span class="label">Необходимая
+                                    сумма:</span>
+                                <input type="text" class="input input-double" @blur="deactivateAddInput(5)"
+                                    @focus="activateAddInput(5)" v-model="activeInputs[5].value" id="taksSum"
+                                    @keydown="inputTransactSum($event)"></label>
+                        </div>
+                        <input type="submit" value="Добавить" class="task-btn">
+                    </form>
+                </div>
+                <div class="plans" v-if="plan=='limit'">
+                    <div class="add-content sm column" v-if="limits.length">
+                        <div class="plans-item" v-for="(limit, index) in limits">
+                            <div class="limits-category">{{limit.category}}</div>
+                            <div class="limit-days">Дней осталось: {{dateLimitCalc(limit.days)}}</div>
+                            <div class="plans-progress limit-progress"
+                                :title="calcLimitLine(limit.currentVal, limit.limit)">
+                                <div v-if="calcLimitLine(limit.currentVal, limit.limit)=='100%'" class="limit-alert">
+                                    Лимит
+                                    превышен!</div>
+                                <div v-if="calcLimitLine(limit.currentVal, limit.limit)!='100%' && dateLimitCalc(limit.days)==0"
+                                    class="limit-alert">Лимит
+                                    выполнен!</div>
+                                <div class="plans-line">
+                                    <div class="plans-subline"
+                                        :style="{width: calcLimitLine(limit.currentVal, limit.limit)}"
+                                        :class="{orange: (limit.currentVal/limit.limit)*100>40, red:(limit.currentVal/limit.limit)*100>70}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="plans-bill limit-bill">{{limit.currentVal}} / {{limit.limit}}</div>
+                            <button class="plans-remove limit-remove" @click="removeLimit(index)">Удалить</button>
+                        </div>
+                    </div>
+                    <p class="no-notes" v-else>Лимитов пока нет. Добавьте первый.</p>
+                    <form class="plan minus-sum" action="" @submit.prevent="setLimit">
+                        <div class="inputs-group large limits">
+                            <label for="category" class="lable-triple"
+                                :class="{set: activeInputs[6].active == true}"><span class="label">Категория:</span>
+                                <input type="text" class="input input-double" @blur="deactivateAddInput(6)"
+                                    @focus="activateAddInput(6)" v-model="activeInputs[6].value" id="category"></label>
+                            <label for="limit" class="lable-triple" :class="{set: activeInputs[7].active == true}"><span
+                                    class="label">Лимит:</span>
+                                <input type="text" class="input input-double" @blur="deactivateAddInput(7)"
+                                    @focus="activateAddInput(7)" v-model="activeInputs[7].value" id="limit"
+                                    @keydown='inputTransactSum($event)'></label>
+                            <label for="days" class="lable-triple" :class="{set: activeInputs[8].active == true}"><span
+                                    class="label">Количество дней:</span>
+                                <input type="text" class="input input-double" @blur="deactivateAddInput(8)"
+                                    @focus="activateAddInput(8)" v-model="activeInputs[8].value" id="days"
+                                    @keydown='inputTransactSum($event)'></label>
+                        </div>
+                        <input type="submit" value="Добавить" class="task-btn">
+                    </form>
+                </div>
             </div>
         </div>
-        <div v-if="content[1].show" class="stat">
-            <div class="add-tabs">
-                <a href="#" :class="{active:stat=='journal'}" @click.prevent="stat='journal'" class="add-tab">Журнал</a>
-                <a href="#" :class="{active:stat=='report'}" @click.prevent="stat='report'" class="add-tab">Отчеты</a>
-            </div>
-            <div class="add-content sm" v-if="stat=='journal'">
-                <table v-if="allTransaction.length">
-                    <tr>
-                        <td class="head">Дата</td>
-                        <td class="head">Тип</td>
-                        <td class="head">Сумма</td>
-                        <td class="head">Категория</td>
-                        <td class="head">Описание</td>
-                        <td class="head">Удалить</td>
-                    </tr>
-                    <tr v-for="(item, index) in allTransaction"
-                        :class="{plus: item.type=='Доход', minus: item.type=='Расход'}">
-                        <td>{{item.date}}</td>
-                        <td>{{item.type}}</td>
-                        <td>{{item.sum + ' ₴'}}</td>
-                        <td>{{item.target}}</td>
-                        <td>{{item.desc}}</td>
-                        <td><button class="remove-transaction" @click="removeTransaction(index)"
-                                :class="{red: item.type=='Доход', green: item.type=='Расход'}">Удалить</button></td>
-                    </tr>
-                </table>
-                <p class="no-notes" v-else>Записей пока нет.</p>
-            </div>
-        </div>
-        <div v-if="content[2].show" class="bill">bill</div>
-
     </div>
 
-
-
-    <script src="https://unpkg.com/vue@next"></script>
+    <!-- <script src="https://unpkg.com/vue@next"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="script.js"></script>
 </body>

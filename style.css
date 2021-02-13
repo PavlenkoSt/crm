@@ -40,6 +40,7 @@ header ul li a {
     justify-content: center;
     align-items: center;
     transition: all ease 0.2s;
+    cursor: pointer;
 }
 header ul li a:hover {
     background-color: rgb(238, 163, 0);
@@ -108,6 +109,9 @@ header ul li a.active {
     min-height: auto;
     height: auto;
 }
+.add-content.column {
+    flex-direction: column;
+}
 form {
     margin-top: 50px;
     margin-bottom: 50px;
@@ -140,6 +144,9 @@ label {
 }
 .lable-double {
     width: 49%;
+}
+.lable-triple {
+    width: 32%;
 }
 .label {
     font-weight: 700;
@@ -211,7 +218,7 @@ label.set .label {
     justify-content: center;
     align-items: center;
     background-color: rgb(255, 176, 5);
-    position: absolute;
+    position: fixed;
     color: #fff;
     font-size: 15px;
     font-weight: 700;
@@ -233,6 +240,7 @@ tr.plus {
 }
 td {
     font-weight: 700;
+    padding: 15px 10px !important;
 }
 .remove-transaction {
     padding: 5px 10px;
@@ -254,6 +262,170 @@ td {
     font-size: 16px;
     font-weight: 700;
     margin-top: 50px;
+    margin-bottom: 50px;
+    text-align: center;
+}
+.diagram {
+    margin-top: 20px;
+    color: #9481c9;
+}
+.diagram-btns {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 5px;
+    align-items: center;
+    min-width: 400px;
+}
+.idagram-body {
+    min-width: 400px;
+    min-height: 400px;
+}
+.diagram-btn {
+    text-transform: uppercase;
+    font-size: 22px;
+    font-weight: 700;
+    position: relative;
+}
+.diagram-btn::after {
+    content: "";
+    width: 0;
+    height: 2px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: width ease 0.2s;
+}
+.diagram-btn.plus {
+    color: #31a626;
+}
+.diagram-btn.plus.active::after {
+    background-color: #31a626;
+    width: 100%;
+}
+.diagram-btn.minus {
+    color: #d40202;
+}
+.diagram-btn.minus.active::after {
+    background-color: #d40202;
+    width: 100%;
+}
+.select {
+    padding-bottom: 20px;
+}
+form.plan {
+    width: 100%;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 0 !important;
+}
+.inputs-group.large {
+    width: 80%;
+}
+.task-btn {
+    width: 18%;
+    height: 35px;
+    background-color: rgb(255, 176, 5);
+    box-shadow: 1px 1px 2px #333;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    border: none;
+    text-transform: uppercase;
+    transition: all ease 0.2s;
+    outline: none;
+}
+.plans-item {
+    width: 100%;
+    padding: 20px 15px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgb(161, 161, 161);
+}
+.plans-item:first-child {
+    margin-top: 5px;
+}
+.plans-item label {
+    width: 20%;
+}
+.plans-progress {
+    width: 50%;
+    padding: 0 10px;
+}
+.plans-name {
+    color: #333 !important;
+}
+.plans-bill {
+    width: 15%;
+    text-align: center;
+    padding: 0 10px;
+}
+.plans-remove {
+    width: 15%;
+}
+.plans-line {
+    width: 100%;
+    height: 5px;
+    background-color: rgb(177, 177, 177);
+    position: relative;
+    overflow: hidden;
+}
+.plans-subline {
+    content: "";
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #31a626;
+}
+.plans-subline.orange {
+    background-color: rgb(235, 160, 0);
+}
+.plans-subline.red {
+    background-color: #d40202 !important;
+}
+.plans-remove {
+    cursor: pointer;
+    outline: none;
+}
+.plans-remove:focus {
+    background-color: rgb(214, 214, 214);
+}
+[type="checkbox"]:checked + span:not(.lever):before {
+    border-right: 3px solid #31a626a2;
+    border-bottom: 3px solid #31a626a2;
+}
+.limits-category {
+    width: 15%;
+    padding: 0 5px;
+    font-weight: 700;
+    font-size: 14px;
+}
+.limit-days {
+    width: 15%;
+    padding: 0 5px;
+    text-align: center;
+}
+.plans-progress.limit-progress {
+    width: 50%;
+    position: relative;
+}
+.plans-bill.limit-bill {
+    width: 15%;
+    padding: 0 5px;
+}
+.plans-remove.limit-remove {
+    width: 15%;
+    padding: 0 5px;
+}
+.limit-alert {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 @media (min-width: 975px) {
     .add-btn.plus:hover {
@@ -267,5 +439,291 @@ td {
     }
     .remove-transaction.red:hover {
         background-color: #e94040 !important;
+    }
+    .task-btn:hover {
+        background-color: rgb(235, 160, 0);
+    }
+}
+.header-burger {
+    background-color: #333;
+    padding: 0 30px;
+    cursor: pointer;
+    align-items: center;
+    display: none;
+}
+
+.header-burger-line {
+    width: 20px;
+    background-color: orange;
+    height: 2px;
+    position: relative;
+    transition: all ease 0.5s;
+}
+.header-burger-line::before,
+.header-burger-line::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 20px;
+    height: 2px;
+    background-color: orange;
+    transition: all ease 0.5s;
+}
+.header-burger-line::before {
+    top: -7px;
+}
+.header-burger-line::after {
+    top: 7px;
+}
+.header-burger.active .header-burger-line {
+    background-color: transparent;
+    transform: rotate(180deg);
+}
+.header-burger.active .header-burger-line::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+.header-burger.active .header-burger-line::after {
+    transform: rotate(-45deg);
+    top: 0;
+}
+.diagram {
+    width: 300px;
+    padding: 0 10px;
+}
+.diagram-btns {
+    min-width: auto;
+}
+@media (max-width: 900px) {
+    .plans-item {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .plans-item label {
+        width: 30%;
+    }
+    .plans-progress {
+        width: 70%;
+    }
+    .plans-bill {
+        width: 30%;
+    }
+    .plans-remove {
+        margin: 0 10px;
+    }
+    .limits-category {
+        width: 25%;
+    }
+    .limit-days {
+        width: 25%;
+        margin-bottom: 10px;
+    }
+    .plans-progress.limit-progress {
+        width: 50%;
+    }
+    .plans-bill.limit-bill {
+        width: 25%;
+    }
+}
+@media (max-width: 650px) {
+    .header-burger {
+        display: grid;
+    }
+    ul {
+        position: absolute;
+        top: 80px;
+        left: 0;
+        z-index: 999;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        box-shadow: 2px 0 2px #333;
+        transform: translateY(-300%);
+        transition: all ease 0.2s;
+    }
+    ul.active {
+        transform: translateY(0);
+    }
+    header ul li {
+        height: auto;
+    }
+    header ul li a {
+        height: 50px;
+        background-color: rgb(235, 160, 0);
+        box-shadow: 2px 0 2px #333;
+    }
+    td.none {
+        display: none;
+    }
+    form {
+        width: 100%;
+        padding: 0 10px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .inputs-group {
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .add-tab {
+        font-size: 15px;
+    }
+    .plans-item {
+        flex-direction: column;
+    }
+    .plans-item label {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .plans-progress {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    .plans-bill {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .plans-remove {
+        margin: 0 auto;
+        width: auto;
+    }
+    form.plan {
+        flex-direction: column;
+        padding-bottom: 30px;
+    }
+    .inputs-group.large.plans {
+        flex-direction: column;
+        width: 100%;
+    }
+    .inputs-group.large.plans .lable-double {
+        width: 100%;
+    }
+    form.plan .task-btn {
+        width: 100%;
+    }
+    .limits-category {
+        width: 100%;
+    }
+    .limit-days {
+        text-align: start;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .plans-progress.limit-progress {
+        width: 100%;
+    }
+    .plans-bill.limit-bill {
+        width: 100%;
+    }
+    .plans-remove.limit-remove {
+        width: auto;
+    }
+    .lable-triple {
+        width: 100%;
+    }
+    .inputs-group.large.limits {
+        flex-direction: column;
+        width: 100%;
+    }
+    .dropdown-content.select-dropdown {
+        top: 0 !important;
+    }
+}
+@media (max-width: 500px) {
+    td {
+        font-size: 10px;
+        padding: 10px 5px !important;
+    }
+    .remove-transaction {
+        font-size: 10px;
+    }
+    .modal-header {
+        font-size: 20px;
+    }
+    .modal-info {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}
+#app.no-scroll {
+    overflow: hidden;
+}
+#cube-loader {
+    align-items: center;
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgb(216, 216, 216);
+    z-index: 1000;
+}
+#cube-loader .caption {
+    margin: 0 auto;
+}
+#cube-loader .cube-loader {
+    width: 73px;
+    height: 73px;
+    margin: 0 auto;
+    margin-top: 49px;
+    position: relative;
+    transform: rotateZ(45deg);
+}
+#cube-loader .cube-loader .cube {
+    position: relative;
+    transform: rotateZ(45deg);
+    width: 50%;
+    height: 50%;
+    float: left;
+    transform: scale(1.1);
+}
+#cube-loader .cube-loader .cube:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #34495e;
+    animation: cube-loader 2.76s infinite linear both;
+    transform-origin: 100% 100%;
+}
+#cube-loader .cube-loader .loader-2 {
+    transform: scale(1.1) rotateZ(90deg);
+}
+#cube-loader .cube-loader .loader-3 {
+    transform: scale(1.1) rotateZ(180deg);
+}
+#cube-loader .cube-loader .loader-4 {
+    transform: scale(1.1) rotateZ(270deg);
+}
+#cube-loader .cube-loader .loader-2:before {
+    animation-delay: 0.35s;
+}
+#cube-loader .cube-loader .loader-3:before {
+    animation-delay: 0.69s;
+}
+#cube-loader .cube-loader .loader-4:before {
+    animation-delay: 1.04s;
+}
+
+@keyframes cube-loader {
+    0%,
+    10% {
+        transform: perspective(136px) rotateX(-180deg);
+        opacity: 0;
+    }
+    25%,
+    75% {
+        transform: perspective(136px) rotateX(0deg);
+        opacity: 1;
+    }
+    90%,
+    100% {
+        transform: perspective(136px) rotateY(180deg);
+        opacity: 0;
     }
 }
