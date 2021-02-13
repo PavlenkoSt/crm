@@ -360,7 +360,7 @@ const app = new Vue({
         },
         dateLimitCalc(days) {
             let dateCur = new Date();
-            let diff = Math.floor((this.unpackDateForLimit(days) - dateCur) / 60 / 60 / 24 / 1000);
+            let diff = Math.ceil((this.unpackDateForLimit(days) - dateCur) / 60 / 60 / 24 / 1000);
             if (diff >= 0) {
                 return diff;
             } else {
